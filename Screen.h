@@ -38,6 +38,7 @@ public:
 		mvwprintw(scoreBoardWin, 4, 2, "+: ");
 		mvwprintw(scoreBoardWin, 5, 2, "-: ");
 		mvwprintw(scoreBoardWin, 6, 2, "G: ");
+		mvwprintw(scoreBoardWin, 7, 2, "Time: ");
 
 		mvwprintw(missionWin, 1, 8, "Mission: ");
 		mvwprintw(missionWin, 3, 2, "B: ");
@@ -97,7 +98,7 @@ public:
 		scoreBoardWin = newwin(height/3, width/4, yMax/2-height/2.5, xMax/2 + width/8);
 		missionWin = newwin(height/3, width/4, yMax/2, xMax/2+width/8);
 
-		wtimeout(mainWin, 1000); //1초마다 refresh
+		wtimeout(mainWin, 200); //0.2초마다 refresh
 	}
 
 	void loadMap(int mapNumber) // 맵 불러오기 (인자: 맵 번호)
@@ -117,6 +118,15 @@ public:
 				break;
 			case 3:
 				mapFile.open("map4.txt");
+				break;
+			case 4:
+				mapFile.open("GAME_CLEAR.txt");
+				break;
+			case 5:
+				mapFile.open("STAGE_CLEAR.txt");
+				break;
+			case -1:
+				mapFile.open("GAME_OVER.txt");
 				break;
 			default:
 				return;				

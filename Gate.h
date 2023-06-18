@@ -12,8 +12,11 @@ public:
 
     void generateGate() //게이트 생성
     {
+        if(game.usingGate) //게이트를 통과중이라면 리턴
+            return;
+
         gatePeriod++;
-        if (gatePeriod < 10) //게이트 생성 주기: 10초
+        if (gatePeriod < 60) //게이트 생성 주기
             return;
 
         srand(time(NULL));

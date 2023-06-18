@@ -9,56 +9,77 @@ public:
     Game& game;
     int row, col;
     char Apple;
-    char Poision;
-    bool isVisible;
+    char Poison;
     int Gcnt = 0, Pcnt = 0;
+    int itemPeriod;
 
-    Item(Game& g) : game(g), isVisible(false)
+    Item(Game& g) : game(g), itemPeriod(0)
     {
         Apple = 'A';
-        Poision = 'V';
+        Poison = 'P';
+    }
+
+    void itemManage()
+    {
+        Generate_item();
+        itemPeriod++;
+        if (itemPeriod < 100)
+            return;
+        Delete_item();
+        itemPeriod = 0;
+        cnt_init();
+        return;
     }
 
     void Generate_item()
     {
-        if (isVisible)
-            return;    // 이미 아이템이 있는 경우
-
         srand((unsigned)time(NULL));
-
-        row = (rand() % 17 + 6);
-        col = (rand() % 37 + 5);
-
-        // 랜덤 위치에 아이템 추가
-        if (Gcnt == 3 && game.getCharAt(row, col) == '0')
+        if ((Gcnt + Pcnt) < 3)   // Apple 2개, P 1개 생성
         {
-            game.addWithPos(row, col, Poision);
-            isVisible = true;
-            Pcnt++;
-        }
+            do
+            {
+                row = (rand() % 17 + 6);
+                col = (rand() % 37 + 5);
+            } while (game.getCharAt(row, col) != '0');
 
-        else if (Gcnt < 3 && game.getCharAt(row, col) == '0')
-        {
-            game.addWithPos(row, col, Apple);
-            isVisible = true;
-            Gcnt++;
+            if (Gcnt == 0 || Gcnt == 1)
+            {
+                game.addWithPos(row, col, Apple);
+                Gcnt++;
+            }
+            else
+            {
+                game.addWithPos(row, col, Poison);
+                Pcnt++;
+            }
         }
     }
 
     void Delete_item()
     {
-        if (!isVisible)
-            return;
-
-        game.addWithPos(row, col, '0');
-        isVisible = false;
+        int flag = 0;
+        for (int i = 0; i < 23; i++)
+        {
+            for (int j = 0; j < 42; j++)
+            {
+                if (flag == 2)
+                    break;
+                else
+                {
+                    if (game.getCharAt(i, j) == 'A' || game.getCharAt(i, j) == 'P')
+                    {
+                        game.addWithPos(i, j, '0');
+                        flag++;
+                    }
+                }
+            }
+        }
     }
 
     void cnt_init()   // 횟수 초기화 함수
     {
-        Gcnt = 0;
+        Gcnt = 1;
         Pcnt = 0;
     }
-};
 
-// mainWin = newwin(height, width, yMax/2 - 15, xMax/2-45);
+};
